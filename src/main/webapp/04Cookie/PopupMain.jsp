@@ -1,14 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
+//레이어 팝업창을 오픈 여부에 대한 변수.
+String popupMode = "on"; //on인 경우 팝업창을 연다.
 
-String popupMode = "on";
-
+//웹브라우저에서 생상된 쿠키 전체를 배열로 얻어온다.
 Cookie[] cookies = request.getCookies();
 if(cookies != null){
 	for(Cookie c: cookies){
 		String cookieName = c.getName();
 		String cookieValue = c.getValue();
+		//쿠키명이 PopupClose일 때 쿠키값을 변수에 저장한다.
 		if(cookieName.equals("PopupClose")){
 			popupMode = cookieValue;
 		}
@@ -33,15 +35,27 @@ if(cookies != null){
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
 $(function(){
+	//닫기버튼을 누르면
 	$('#closeBtn').click(function(){
+		//레이어 팝업창을 숨김처리 한다.
 		$('#popup').hide();
+		//하루동안 열지 않음 체크박스에 체크된 경우 value를 얻어옴.
 		var chkVal = $("input:checkbox[id=inactiveToday]:checked").val();
 		$.ajax({
-			url: './PopupCookie.jsp',
-			type: 'get',
-			data: {inactiveToday:chkVal},
-			dataType: "text",
-			success: function(resData){
+			url: './PopupCookie.jsp', //요청 URL
+			type: 'get', //전송방식
+			data: {inactiveToday:chkVal}, //파라미터(매개변수)
+			dataType: "text", //콜백데이터의 형식
+			success: function(resData){ //성공했을 때의 콜백메서드
+				//콜백데이터는 매개변수 resData가 받는다.
+				if(resData){
+					console.log("있다");
+				}
+				else{
+					console.log("없다");	
+				}
+				//콜백데이터가 있다면 화면을 새로고침한다.
+				//쿠키는 화면 로드 직후엔 바로 사용할수 없기에 강제적으로 한번 새로고침해줌.
 				if(resData != '') location.reload();
 			}
 		});
@@ -55,6 +69,7 @@ $(function(){
 	for(int i=1; i<=10; i++){
 		out.print("현재 팝업창은"+ popupMode +"상태입니다<br>");
 	}
+	//popupMode가 on일때만 레이어 팝업창을 오픈한다.
 	if(popupMode.equals("on")){
 %>
 	<div id="popup">
