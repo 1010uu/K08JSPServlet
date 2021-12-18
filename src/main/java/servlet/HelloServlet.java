@@ -25,6 +25,7 @@ public class HelloServlet extends HttpServlet{
 			//View에 해당하는 JSP페이지로 포워드한다.
 			req.getRequestDispatcher("/13Servlet/HelloServlet.jsp")
 				.forward(req, resp);
-			//리퀘스트영역은 포워드된 페이지까지 공유되므로 
+			/*리퀘스트영역은 포워드된 페이지까지 공유되므로 앞에서 저장한 
+			 속성 값을 사용할 수 있다.*/
 		}
 }
